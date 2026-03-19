@@ -78,10 +78,11 @@ export function parseIncomingWebhook(req: Request): IncomingMessage {
     }>;
   };
 
-  const msg = body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
-  if (!msg) {
-    throw new Error("[meta] No message found in webhook payload");
-  }
+    const msg = body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+    if (!msg) {
+      // Meta also sends status updates (delivered/read) with no messages[] — ignore them
+      return null as unknown as IncomingMessage;
+    }
 
   const text =
     msg.text?.body ??
