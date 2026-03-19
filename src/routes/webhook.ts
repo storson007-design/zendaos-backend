@@ -63,8 +63,9 @@ const metaPostHandler = async (req: Request, res: Response) => {
   res.sendStatus(200);
 
   try {
-    const message = parseIncomingWebhook(req);
-    if (!message.text) return;
+      const message = parseIncomingWebhook(req);
+      if (!message) return; // status update (delivered/read) — ignore
+      if (!message.text) return;
 
     console.log(`[webhook] from=${message.from} text="${message.text}"`);
 
