@@ -57,7 +57,8 @@ router.get("/", metaVerifyHandler);
 router.get("/whatsapp", metaVerifyHandler);
 
 // ── Inbound message (POST) ────────────────────────────────────────────────────
-router.post("/whatsapp", async (req: Request, res: Response) => {
+// Meta Cloud API posts to /webhook (root), alias also on /webhook/whatsapp
+const metaPostHandler = async (req: Request, res: Response) => {
   // Acknowledge immediately (providers retry on non-2xx)
   res.sendStatus(200);
 
@@ -124,6 +125,9 @@ router.post("/whatsapp", async (req: Request, res: Response) => {
   } catch (err) {
     console.error("[webhook] Unhandled error:", err);
   }
-});
+};
+
+router.post("/", metaPostHandler);
+router.post("/whatsapp", metaPostHandler);
 
 export default router;
