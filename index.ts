@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "./src/config/index.ts";
-import webhookRouter from "./src/routes/webhook.ts";
+import webhookRouter, { metaWebhookPost } from "./src/routes/webhook.ts";
 import agendaPublicRouter from "./src/routes/agenda-public.ts";
 import dashboardApiRouter from "./src/routes/dashboard-api.ts";
 import stripeWebhookRouter from "./src/routes/stripe-webhook.ts";
@@ -27,6 +27,9 @@ app.get("/", (_req, res) => {
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", provider: config.whatsappProvider });
 });
+
+// Meta Cloud API sends POST directly to /webhook (no suffix)
+app.post("/webhook", metaWebhookPost);
 
 app.use("/webhook", webhookRouter);
 app.use("/webhook", stripeWebhookRouter);
