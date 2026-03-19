@@ -40,17 +40,21 @@ const HELP_TEXT =
   `• _activar plan_`;
 
 // ── Meta webhook verification (GET) ──────────────────────────────────────────
-router.get("/whatsapp", (req: Request, res: Response) => {
+// Handles both /webhook and /webhook/whatsapp (Meta uses /webhook directly)
+const metaVerifyHandler = (req: Request, res: Response) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
   if (mode === "subscribe" && token === config.metaVerifyToken) {
-    res.status(200).send(challenge);
+    res.status(200).send(challenge as string);
     return;
   }
   res.sendStatus(403);
-});
+};
+
+router.get("/", metaVerifyHandler);
+router.get("/whatsapp", metaVerifyHandler);
 
 // ── Inbound message (POST) ────────────────────────────────────────────────────
 router.post("/whatsapp", async (req: Request, res: Response) => {
