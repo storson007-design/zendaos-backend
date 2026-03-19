@@ -130,4 +130,5 @@ const metaPostHandler = async (req: Request, res: Response) => {
 router.post("/", metaPostHandler);
 router.post("/whatsapp", metaPostHandler);
 
+export { metaPostHandler as metaWebhookPost };
 export default router;
