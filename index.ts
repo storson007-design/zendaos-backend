@@ -20,7 +20,10 @@ app.use(express.urlencoded({ extended: false })); // for HTML form POST
 
 // ── Landing page ──────────────────────────────────────────────────────────────
 app.get("/", (_req, res) => {
-  res.sendFile(path.join(__dirname, "landing", "index.html"));
+  const landingPath = path.join(__dirname, "landing", "index.html");
+  res.sendFile(landingPath, (err) => {
+    if (err) res.json({ status: "ok", service: "ZendaOS Backend" });
+  });
 });
 
 // ── Routes ───────────────────────────────────────────────────────────────────
